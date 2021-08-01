@@ -1,5 +1,4 @@
-
-stessa repo di ieri, mantenete il file di ieri e aggiungetene uno nuovo .txt dove scrivere  le query SQL per:
+Stessa repo di ieri, mantenete il file di ieri e aggiungetene uno nuovo .txt dove scrivere  le query SQL per:
 
 •	Selezionare tutti gli studenti nati nel 1990
 SELECT * FROM `students` WHERE `date_of_birth` >= '1990-01-01' AND `date_of_birth` <= '1990-12-11'
@@ -24,3 +23,43 @@ SELECT COUNT(*) FROM `departments`
 
 •	Quanti sono gli insegnanti che non hanno un numero di telefono?
 SELECT COUNT(*) FROM `teachers` WHERE 'telefono' IS NULL
+
+
+-------------------------------------------------------------------------------------------
+
+- Contare quanti iscritti ci sono stati ogni anno
+  SELECT COUNT(*) FROM `students` WHERE `enrolment_date` GROUP BY year (enrolment_date)
+
+- Contare gli insegnanti che hanno l’ufficio nello stesso edificio
+  SELECT exam_id, AVG(vote) FROM exam_student GROUP BY exam_id
+
+- Calcolare la media dei voti di ogni appello d’esame
+  SELECT AVG(vote) FROM `exam_student` GROUP BY `exam_id`
+
+- Contare quanti corsi di laurea ci sono per ogni dipartimento
+  SELECT COUNT(name) FROM `degrees` GROUP BY `department_id`
+
+- Selezionare tutti gli studenti iscritti al Corso di Laurea in Economia
+  SELECT * FROM `students` INNER JOIN `degrees` ON `students`.`degree_id` = `degrees`.`id` WHERE `degrees`.`name` LIKE 'Corso di Laura in Economia'
+-----------
+- Selezionare tutti i Corsi di Laurea del Dipartimento di Neuroscienze
+  SELECT departments.name, degrees.name FROM degrees INNER JOIN departments ON degrees.department_id = departments.id WHERE departments.name = 'Dipartimento di Neuroscienze'
+ 
+- Selezionare tutti i corsi in cui insegna Fulvio Amato (id=44)
+  SELECT courses.name, teachers.name, teachers.surname FROM courses INNER JOIN teachers INNER JOIN course_teacher ON course_teacher.teacher_id = teachers.id WHERE teachers.id = 44
+
+
+- Selezionare tutti gli studenti con i dati relativi al corso di laurea a cui sono iscritti e
+  il relativo dipartimento, in ordine alfabetico per cognome e nome
+  SELECT `students`.`surname`, `students`.`name`, `degrees`.`name`, `departments`.`name` FROM `students` INNER JOIN `degrees` ON `students`.`degree_id` = `degrees`.`id` INNER JOIN `departments` ON `degrees`.`department_id` = `departments`.`id` ORDER BY `students`.`surname` ASC,  `students`.`name` ASC
+
+- Selezionare tutti i corsi di laurea con i relativi corsi e insegnanti
+  SELECT degrees.name, courses.name, teachers.name, teachers.surname FROM `degrees` INNER JOIN courses INNER JOIN teachers INNER JOIN course_teacher ON course_teacher.course_id = courses.id AND course_teacher.teacher_id = teachers.id ORDER BY degrees.name
+
+- Selezionare tutti i docenti che insegnano nel Dipartimento di Matematica (54)
+  SELECT teachers.surname, teachers.name, departments.name FROM `teachers` INNER JOIN `course_teacher` ON course_teacher.teacher_id = teachers.id INNER JOIN `courses` ON course_teacher.course_id = courses.id INNER JOIN `degrees` ON courses.degree_id = degrees.id INNER JOIN `departments` ON degrees.department_id = departments.id WHERE departments.id = 5 ORDER BY teachers.surname, teachers.name ASC
+
+
+- BONUS: Selezionare per ogni studente quanti tentativi d’esame ha sostenuto per superare ciascuno dei suoi esami
+
+
